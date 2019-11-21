@@ -22,10 +22,10 @@ export class Baby{
         return numberInRange(Math.floor((Date.now-this._lastFed) / (5*minute))-1, 0, 5);
     }
     problems() {
-        return this._bored + Math.floor(this._pee/2) + 2*this.hunger + 3*this._poo;
+        return this._bored + 2*this.hunger + 3*this._poo + this._pee > 3 ? 1 + 2 * (this._pee - 3) : Math.floor(this._pee/2);
     }
     unhappyRate() {
-        return this.problems <= 1 ? minute : numberInRange (minute - 5*this.problems, 1)
+        return numberInRange(minute - 5*this.problems, 1);
     }
     happyRate() {
         return this.problems <= 1 ? 10 : 30 * this.problems;
@@ -50,15 +50,17 @@ export class Baby{
             if (this._bored) {
                 this._bored--;
                 this.addHappy(10);
+            } else if (this.problems <= 1) {
+                this.addHappy(10);
             } else {
                 this.addHappy(5);
             }
         }
     }
     changeDiaper() {
+        this.pet(this._poo + this._pee/2);
         this._poo = 0;
         this._pee = 0;
-        this.pet();
     }
     feed() {
         this.pet(this.hunger);
