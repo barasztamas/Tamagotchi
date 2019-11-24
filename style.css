@@ -1,3 +1,22 @@
-#test {
+
+
+div#head {
     cursor:url(img/hand-cursor-24.gif),url(img/hand-cursor-24.png),url(img/hand-cursor-24.ico),pointer;
 }
+
+.col {
+    float: left;
+}
+.left, .right {
+    width: 25%;
+}
+  
+.mid {
+    width: 50%;
+}
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }

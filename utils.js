@@ -16,8 +16,15 @@ export function numberInRange(nr, minimum, maximum=nr) {
  * @param  {Function} fn
  */
 export function doByChance(eventRate, dt, obj, fn) {
-    const eventChance = eventRate * dt;
+    const eventChance = dt/eventRate;
+    //console.log(eventRate, dt, eventChance);
     if (Math.random() < eventChance) {
         fn.call(obj);
     }
+}
+/**
+ * @param  {number} time
+ */
+export function secondsSince(time) {
+    return (Date.now() - time) / 1000;
 }

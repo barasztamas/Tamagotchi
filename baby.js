@@ -1,4 +1,4 @@
-import { minute, numberInRange, doByChance } from "./utils.js";
+import { minute, numberInRange, doByChance, secondsSince } from "./utils.js";
 
 export class Baby{
     constructor() {
@@ -10,7 +10,7 @@ export class Baby{
     }
     //Baby's state
     pooRate() {
-        return numberInRange((40 * minute) - (Date.now() - this._lastPoo), minute);
+        return numberInRange((40 * minute) - secondsSince(this._lastPoo), minute);
     }
     peeRate() {
         return 5 * minute;
@@ -19,16 +19,16 @@ export class Baby{
         return 1.5 * minute;
     }
     hunger() {
-        return numberInRange(Math.floor((Date.now-this._lastFed) / (5*minute))-1, 0, 5);
+        return numberInRange(Math.floor(secondsSince(this._lastFed) / (5*minute))-1, 0, 5);
     }
     problems() {
-        return this._bored + 2*this.hunger + 3*this._poo + this._pee > 3 ? 1 + 2 * (this._pee - 3) : Math.floor(this._pee/2);
+        return this._bored + 2*this.hunger() + 3*this._poo + (this._pee > 3 ? 1 + 2 * (this._pee - 3) : Math.floor(this._pee/2));
     }
     unhappyRate() {
-        return numberInRange(minute - 5*this.problems, 1);
+        return numberInRange(minute * (1 - 0.08 * this.problems()), 1);
     }
     happyRate() {
-        return this.problems <= 1 ? 10 : 30 * this.problems;
+        return this.problems() <= 1 ? minute/6 : minute * 0.5 * this.problems();
     }
     //Baby actions
     poo() {
@@ -39,10 +39,16 @@ export class Baby{
         this._pee++;
     }
     bore() {
-        this._bored++;
+        this._bored = numberInRange(this._bored + 1, 0, 5);
     }
     addHappy(by) {
         this._happy = numberInRange(this._happy + by, 0, 100);
+    }
+    happyPlus() {
+        this.addHappy(1);
+    }
+    happyMinus() {
+        this.addHappy(-1);
     }
     //User actions
     pet(times=1) {
@@ -70,10 +76,10 @@ export class Baby{
     }
     //Simulation step
     next(dt) {
-        doByChance(this.pooRate     , dt, this, this.poo);
-        doByChance(this.peeRate     , dt, this, this.pee);
-        doByChance(this.boreRate    , dt, this, this.bore);
-        doByChance(this.happyRate   , dt, this, this.addHappy.bind(this,1));
-        doByChance(this.unhappyRate , dt, this, this.addHappy.bind(this, -1));
+        doByChance(this.pooRate()       , dt, this, this.poo);
+        doByChance(this.peeRate()       , dt, this, this.pee);
+        doByChance(this.boreRate()      , dt, this, this.bore);
+        doByChance(this.happyRate()     , dt, this, this.happyPlus);
+        doByChance(this.unhappyRate()   , dt, this, this.happyMinus);
     }
 }
