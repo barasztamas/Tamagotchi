@@ -25,7 +25,7 @@ export class Baby{
         return this._bored + 2*this.hunger() + 3*this._poo + (this._pee > 3 ? 1 + 2 * (this._pee - 3) : Math.floor(this._pee/2));
     }
     unhappyRate() {
-        return numberInRange(minute * (1 - 0.08 * this.problems()), 1);
+        return minute/6;
     }
     happyRate() {
         return this.problems() <= 1 ? minute/6 : minute * 0.5 * this.problems();
