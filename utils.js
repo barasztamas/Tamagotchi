@@ -1,6 +1,6 @@
 
 
-export const minute = 60;
+export const minute = 6;
 /**
  * @param  {number} nr
  * @param  {number} minimum
@@ -17,7 +17,6 @@ export function numberInRange(nr, minimum, maximum=nr) {
  */
 export function doByChance(eventRate, dt, obj, fn) {
     const eventChance = dt/eventRate;
-    //console.log(eventRate, dt, eventChance);
     if (Math.random() < eventChance) {
         fn.call(obj);
     }

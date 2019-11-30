@@ -5,8 +5,9 @@ export class Baby{
         this._lastPoo = Date.now();
         this._lastFed = Date.now();
         this._bored = 0;
-        this._happy = 100;
-        this.changeDiaper();
+        this._happy = 99;
+        this._poo = 0;
+        this._pee = 0;
     }
     //Baby's state
     pooRate() {
@@ -42,7 +43,7 @@ export class Baby{
         this._bored = numberInRange(this._bored + 1, 0, 5);
     }
     addHappy(by) {
-        this._happy = numberInRange(this._happy + by, 0, 100);
+        this._happy = numberInRange(this._happy + by, 0, 99);
     }
     happyPlus() {
         this.addHappy(1);
@@ -51,7 +52,8 @@ export class Baby{
         this.addHappy(-1);
     }
     //User actions
-    pet(times=1) {
+    pet(times = 1) {
+        console.log(`pet(${times})`);
         for (let i = 0; i < times; i++) {
             if (this._bored) {
                 this._bored--;
@@ -64,12 +66,14 @@ export class Baby{
         }
     }
     changeDiaper() {
+        console.log("changeDiapers");
         this.pet(this._poo + this._pee/2);
         this._poo = 0;
         this._pee = 0;
     }
     feed() {
-        this.pet(this.hunger);
+        console.log("feed");
+        this.pet(this.hunger());
         this._bored = 0;
         this._lastFed = Date.now();
         this._lastPoo -= 10 * minute;

@@ -17,5 +17,4 @@ export function render(baby) {
     hungry.innerHTML = baby.hunger();
     pee.innerHTML = baby._pee;
     poo.innerHTML = baby._poo;
-    head.innerHTML = baby._happy;
 }
